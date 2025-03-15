@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lofi 音樂播放器</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f4e0b9, #d9a7c7); /* 暖色調 Lofi 風 */
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #d9a7c7;
+            margin-bottom: 20px;
+        }
+
+        #player {
+            margin: 20px 0;
+        }
+
+        audio {
+            width: 100%;
+            max-width: 400px;
+            margin-top: 10px;
+        }
+
+        #trackInfo {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #d9a7c7;
+            color: white;
+            transition: transform 0.2s, background 0.3s;
+        }
+
+        button:hover {
+            background: #c78fb6;
+            transform: scale(1.05);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* RWD 手機版調整 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                width: 95%;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* 背景模糊動畫 */
+        @keyframes fade {
+            0% { filter: blur(5px); }
+            50% { filter: blur(0px); }
+            100% { filter: blur(5px); }
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://static.vecteezy.com/system/resources/previews/030/661/779/non_2x/a-sunset-lofi-scene-high-quality-free-photo.jpg') no-repeat center center/cover;
+            z-index: -1;
+            animation: fade 10s infinite;
+            filter: blur(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lofi Music Player</h1>
+        <div id="trackInfo">NOW PLAYING：Stylish Car</div>
+        <div id="player">
+            <audio id="audioPlayer" controls autoplay loop>
+                <source src="https://www.bensound.com/bensound-music/bensound-StylishCar.mp3" type="audio/mp3">
+                您的瀏覽器不支援音頻播放。
+            </audio>
+        </div>
+        <div class="buttons">
+            <button onclick="playPause()">播放/暫停</button>
+            <button onclick="nextTrack()">下一首</button>
+        </div>
+    </div>
+
+    <script>
+        const audioPlayer = document.getElementById('audioPlayer');
+        const trackInfo = document.getElementById('trackInfo');
+        let currentTrack = 0;
+
+        const tracks = [
+            {
+                src: "https://www.bensound.com/bensound-music/bensound-stylishcar.mp3",
+                name: "Stylish Car"
+            },
+            {
+                src: "https://www.bensound.com/bensound-music/bensound-north.mp3",
+                name: "North"
+            },
+            {
+                src: "https://www.bensound.com/bensound-music/bensound-sunwave.mp3",
+                name: "Sunwave"
+            },
+            {
+                src: "https://www.bensound.com/bensound-music/bensound-gravity.mp3",
+                name: "Gravity"
+            },
+            {
+                src: "https://www.bensound.com/bensound-music/bensound-allaroundus.mp3",
+                name: "All around Us"
+            },
+            {
+                src: "https://www.bensound.com/bensound-music/bensound-easy.mp3",
+                name: "Easy"
+            }
+        ];
+
+        // 播放/暫停功能
+        function playPause() {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+            } else {
+                audioPlayer.pause();
+            }
+        }
+
+        // 切換下一首
+        function nextTrack() {
+            currentTrack = (currentTrack + 1) % tracks.length;
+            audioPlayer.src = tracks[currentTrack].src;
+            trackInfo.textContent = `NOW PLAYING：${tracks[currentTrack].name}`;
+            audioPlayer.play();
+        }
+
+        // 自動更新播放狀態
+        audioPlayer.addEventListener('play', () => {
+            trackInfo.textContent = `NOW PLAYING：${tracks[currentTrack].name}`;
+        });
+
+        // 確保音頻自動播放（部分瀏覽器限制）
+        audioPlayer.play().catch(error => console.log("自動播放受限:", error));
+    </script>
+</body>
+</html>
